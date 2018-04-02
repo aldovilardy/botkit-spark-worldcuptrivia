@@ -1,4 +1,4 @@
-![botlogo](resources/icon.png){:class="img-responsive"}
+![botlogo](resources/logo.png)
 
 
 # botkit-spark-worldcuptrivia
