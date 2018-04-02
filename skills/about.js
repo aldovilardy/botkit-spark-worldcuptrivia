@@ -6,10 +6,11 @@ module.exports = function (controller, bot) {
     //
     // OVERRIDE WITH YOUR BOT INFORMATION
     //
+    var emoji = require('node-emoji');
     var botcommons = {
 
         // Bot description
-        "description": "Challenge your knowledge about the soccer players participating in Fifa WorldCup Russia 2018",
+        "description": emoji.get("soccer") + " Challenge your knowledge about the soccer players participating in Fifa WorldCup Russia 2018 " + emoji.get("soccer"),
 
         // Where to get more information about the bot
         "url": "https://github.com/diegofn/botkit-spark-worldcuptrivia",
