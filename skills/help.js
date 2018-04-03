@@ -8,6 +8,7 @@ module.exports = function (controller) {
         var text = "😊 I understand:";
         text += "\n- " + bot.appendMention(message, "about") + ": shows metadata about myself 🤖";
         text += "\n- " + bot.appendMention(message, "help") + ": spreads the word about my skills 🤖";
+        text += "\n- " + bot.appendMention(message, "gift") + ": receive a free player sticker 🎁";
         
         bot.reply(message, text);
     });
