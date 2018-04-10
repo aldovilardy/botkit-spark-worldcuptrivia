@@ -42,6 +42,9 @@ var env = process.env.NODE_ENV || "development";
 var controller = Botkit.sparkbot({
     log: true,
     public_address: public_url,
+    webserver: {
+        static_dir: __dirname + '/public'
+    },
     ciscospark_access_token: process.env.SPARK_TOKEN,
     secret: process.env.SECRET, // this is a RECOMMENDED security setting that checks of incoming payloads originate from Cisco Spark
     json_file_store: './botkit-sparkbot/',
