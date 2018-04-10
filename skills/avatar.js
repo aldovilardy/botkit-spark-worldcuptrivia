@@ -29,7 +29,7 @@ module.exports = function (controller) {
                             if (err) throw err;
                             console.log('It\'s saved!');
                         });
-                        bot.reply(message, {text:'I got a text file with the following content: ' + file_info['date'], files:['https://12dc8ed9.ngrok.io/public/nagato.png']} );
+                        bot.reply(message, {text:'I got a text file with the following content: ' + file_info['date'], files:[process.env.PUBLIC_URL + '/nagato.png']} );
                         bot.reply(message,'I got a text file with the following content: ' + file_info['date'] );
                     });
                 }

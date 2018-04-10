@@ -74,6 +74,7 @@ controller.setupWebserver(port, function (err, webserver) {
         "bot": "unknown",   // loaded asynchronously
         "botkit": "v" + bot.botkit.version()
     };
+
     webserver.get(process.env.HEALTHCHECK_ROUTE, function (req, res) {
 
         //
