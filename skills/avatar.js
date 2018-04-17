@@ -18,12 +18,14 @@ module.exports = function (controller) {
         //
         if (message.data.files) {
             bot.retrieveFileInfo(message.data.files[0], function(err, file_info) {
-                if (file_info['content-type'] == 'image/png') {
+                if (file_info['content-type'] == 'image/png' || file_info['content-type'] == 'image/jpeg') {
 
                     bot.retrieveFile(message.data.files[0], function(err, file) {
                         
                         //
                         // Write file to filesystem
+                        // Overlay command. 
+                        // convert Template_FWC18_COL.png IMG_0079.jpg -compose overlay -composite Template_FWC18_COL.png -compose copy-opacity out.png
                         //
                         fs.writeFile('public/' + file_info['filename'], file, 'binary', function (err) {
                             if (err) throw err;
