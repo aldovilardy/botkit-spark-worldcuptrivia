@@ -7,7 +7,7 @@ fs = require('fs');
 
 module.exports = function (controller) {
 
-    controller.hears([/^avatar .*$/i], 'direct_message,direct_mention', function (bot, message) {
+    controller.hears([/^sticker .*$/i], 'direct_message,direct_mention', function (bot, message) {
         //
         // First take a photo
         //
@@ -22,7 +22,7 @@ module.exports = function (controller) {
             // Check for the name in the message
             //
             var sticker_name = "";
-            var reName = new RegExp(/^avatar (.*)$/i);
+            var reName = new RegExp(/^sticker (.*)$/i);
             var arrMatches = message.text.match(reName);
 
             if (arrMatches[1]){
