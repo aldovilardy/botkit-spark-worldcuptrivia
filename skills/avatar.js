@@ -7,7 +7,7 @@ fs = require('fs');
 
 module.exports = function (controller) {
 
-    controller.hears([/^avatar$/i], 'direct_message,direct_mention', function (bot, message) {
+    controller.hears([/^avatar .*$/i], 'direct_message,direct_mention', function (bot, message) {
         //
         // First take a photo
         //
@@ -17,6 +17,18 @@ module.exports = function (controller) {
         // Check if the original message has a photo.
         //
         if (message.data.files) {
+
+            //
+            // Check for the name in the message
+            //
+            var sticker_name = "";
+            var reName = new RegExp(/^avatar (.*)$/i);
+            var arrMatches = message.text.match(reName);
+
+            if (arrMatches[1]){
+                sticker_name = arrMatches[1]; 
+            } 
+            
             bot.retrieveFileInfo(message.data.files[0], function(err, file_info) {
                 if (file_info['content-type'] == 'image/png' || file_info['content-type'] == 'image/jpeg') {
 
@@ -31,8 +43,15 @@ module.exports = function (controller) {
                             if (err) throw err;
                             console.log('It\'s saved!');
                         });
-                        bot.reply(message, {text:'I got a text file with the following content: ' + file_info['date'], files:[process.env.PUBLIC_URL + '/nagato.png']} );
-                        bot.reply(message,'I got a text file with the following content: ' + file_info['date'] );
+
+                        //
+                        // Create the sticker
+                        //
+                        var sticker_command = 'sh ./commands/create_sticker.sh -in="public/' + 'IMG_0078.jpg' + '" -out="public/' + "IMG_0078.png" + '" -name="' + "Niña Alianza" + '" -org="Calltech S.A." -dob="17-03-2017" -y="2018"';
+                        shell.exec(sticker_command);
+
+                        bot.reply(message, {text:'Here is your Sticker, share with your friends on the social media:', files:[process.env.PUBLIC_URL + '/nagato.png']} );
+                        //bot.reply(message,'I got a text file with the following content: ' + file_info['date'] );
                     });
                 }
             });
