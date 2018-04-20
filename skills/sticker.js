@@ -2,8 +2,10 @@
 // Command: avatar
 //
 var emoji = require('node-emoji');
-var request = require('request'),
+var request = require('request');
+var date_format = require('dateformat');
 fs = require('fs');
+const exec = require('child_process').exec; 
 
 module.exports = function (controller) {
 
@@ -41,17 +43,59 @@ module.exports = function (controller) {
                         //
                         fs.writeFile('public/' + file_info['filename'], file, 'binary', function (err) {
                             if (err) throw err;
-                            console.log('It\'s saved!');
+                            console.log('Filename ' + file_info['filename'] + ' saved!');
+
+                            //
+                            // Create the sticker
+                            // Windows style
+                            //
+                            var sticker_photo_input = 'public/' + file_info['filename'];
+                            var sticker_photo_output = 'public/' + file_info['filename'].slice(0, -4) + "_sticker.png";
+                            var sticker_command_first = 'cconvert commands/mask_col.png \( "' + sticker_photo_input + '" -resize 1536x2048^ \) -compose overlay -composite commands/mask_col.png -composite commands/outtemp.png';
+
+                            var sticker_command_last = 'cconvert commands/outtemp.png -font Whitney-Semibold -weight 700  -pointsize 70 -draw "fill black text 300,1860 \'' + sticker_name.toUpperCase();
+                            sticker_command_last += '\' " -pointsize 50 -draw "gravity northeast fill black text 100,1900 \'' + 'CALLTECH S.A.';
+                            sticker_command_last += '\' " -pointsize 50 -draw "gravity northeast fill black text 800,1710 \'' + '20-04-2018';
+                            sticker_command_last += '\' " -pointsize 50 -draw "gravity northeast fill black text 200,315 \'' + '2018';
+                            sticker_command_last += '\' " ' + sticker_photo_output;
+                            
+                            //
+                            // Execute the first command
+                            //
+                            console.log(">>>Command1 Start: " + date_format(new Date(), "h:MM:ss"));
+                            console.log("Command: " + sticker_command_first);
+                            var imageMagick_first = exec(sticker_command_first,
+                                (error, stdout, stderr) => {
+                                    console.log(`${stdout}`);
+                                    console.log(`${stderr}`);
+                                    console.log(">>>Command1 End: " + date_format(new Date(), "h:MM:ss"));
+
+                                    //
+                                    // Execute the second command
+                                    //
+                                    console.log(">>>Command2 Start: " + date_format(new Date(), "h:MM:ss"));
+                                    console.log("Command: " + sticker_command_last);
+                                    var imageMagick_last = exec(sticker_command_last,
+                                        (error, stdout, stderr) => {
+                                            console.log(`${stdout}`);
+                                            console.log(`${stderr}`);
+                                            console.log(">>>Command End: " + date_format(new Date(), "h:MM:ss"));
+
+                                            //
+                                            // Reply the image
+                                            //
+                                            bot.reply(message, {text:'Here is your Sticker, share with your friends on the social media click on share', files:[process.env.PUBLIC_URL + '/' + file_info['filename'].slice(0, -4) + "_sticker.png"]} );        
+
+                                            if (error !== null) {
+                                                console.log(`exec error: ${error}`);
+                                            }
+                                        });
+
+                                    if (error !== null) {
+                                        console.log(`exec error: ${error}`);
+                                    }
+                                });
                         });
-
-                        //
-                        // Create the sticker
-                        //
-                        var sticker_command = 'sh ./commands/create_sticker.sh -in="public/' + 'IMG_0078.jpg' + '" -out="public/' + "IMG_0078.png" + '" -name="' + "Niña Alianza" + '" -org="Calltech S.A." -dob="17-03-2017" -y="2018"';
-                        shell.exec(sticker_command);
-
-                        bot.reply(message, {text:'Here is your Sticker, share with your friends on the social media:', files:[process.env.PUBLIC_URL + '/nagato.png']} );
-                        //bot.reply(message,'I got a text file with the following content: ' + file_info['date'] );
                     });
                 }
             });
